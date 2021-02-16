@@ -63,4 +63,16 @@ public class ToDoItemServlet extends HttpServlet {
             resp.sendError(500, "Internal server error: " + e.getMessage());
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter("id");
+
+        try {
+            toDoItemService.deleteToDoItem(Long.parseLong(id));
+        } catch (SQLException | ClassNotFoundException e) {
+            resp.sendError(500, "Internal server error: " + e.getMessage());
+        }
+    }
 }
