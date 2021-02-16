@@ -4,6 +4,7 @@ import org.example.config.ObjectMapperConfig;
 import org.example.domain.ToDoItem;
 import org.example.service.ToDoItemService;
 import org.example.transfer.CreateItemRequest;
+import org.example.transfer.UpdateItemRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,6 +45,20 @@ public class ToDoItemServlet extends HttpServlet {
             resp.getWriter().flush();
             resp.getWriter().close();
 
+        } catch (SQLException | ClassNotFoundException e) {
+            resp.sendError(500, "Internal server error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter("id");
+
+        UpdateItemRequest request = ObjectMapperConfig.getObjectMapper().readValue(req.getReader(), UpdateItemRequest.class);
+
+        try {
+            toDoItemService.updateToDoItem(Long.parseLong(id), request);
         } catch (SQLException | ClassNotFoundException e) {
             resp.sendError(500, "Internal server error: " + e.getMessage());
         }
